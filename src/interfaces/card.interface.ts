@@ -8,4 +8,5 @@ export interface ICard {
   slug: string;
   image_src: string;
   start_date: string;
+  end_date: string;
 }

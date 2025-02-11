@@ -15,9 +15,9 @@ export const getEvent = async (slug: string) => {
   console.log("-------ini url ------", api_url + "/events/slug?slug=" + slug);
   const res = await fetch(api_url + "/events/slug?slug=" + slug);
   console.log("ini resnya----------====", res);
-  const data = (await res.json()) as ICard;
+  const data = await res.json();
   console.log("ini datanya----------====", data);
-  return data;
+  return data.data as ICard;
 };
 
 // export const createEvent = async () => {

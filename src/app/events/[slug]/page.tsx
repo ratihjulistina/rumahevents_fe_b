@@ -14,74 +14,78 @@ export default async function Page({ params }: Props) {
   const event = await getEvent(slug);
   console.log("ini slug", slug);
   console.log("======ini isi eventnyaa===", event);
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
   return (
     <div className="flex justify-center">
       <div className="max-w-screen-xl w-full mt-14">
         <div className="flex gap-2 mb-2 mx-3">
-          <Link href="/">Sneakers</Link>
+          <Link href="/">Home</Link>
           <span className="grey">{"/"}</span>
           <Link href="#">{event.name}</Link>
         </div>
         <div className="flex p-3 md:border md:shadow-md rounded-md  flex-col md:flex-row">
-          <div className="w-full flex justify-center items-center">
-            {/* <Image src={""} alt="img" width={350} height={249} /> */}
+          <div className="w-full flex justify-center items-start ">
+            <Image
+              src={"/tes.jpg"}
+              alt="img"
+              width={1000}
+              height={900}
+              className="rounded-lg object-cover"
+            />
           </div>
           <div className="w-full">
             <div className="p-6">
               <h1 className="font-bold text-xl mb-5">{event.name}</h1>
-              <p className="w-full">start from</p>
+              <div className="flex gap-2 my-2">
+                <Image
+                  src={"/date-icon.png"}
+                  alt="date-icon"
+                  width={20}
+                  height={20}
+                />
+                <p>{formatDate(event.start_date)}</p>
+                <span>-</span>
+                <p>{formatDate(event.end_date)}</p>
+              </div>
+              <div className="flex gap-2 mb-2">
+                <Image
+                  src={"/time-icon.png"}
+                  alt="date-icon"
+                  width={20}
+                  height={20}
+                />
+                <p>{formatDate(event.start_date)}</p>
+                <span>-</span>
+                <p>{formatDate(event.end_date)}</p>
+              </div>
+              <div className="flex gap-2">
+                <Image
+                  src={"/place-icon.png"}
+                  alt="date-icon"
+                  width={20}
+                  height={20}
+                />
+                <p>{event.location}</p>
+              </div>
               <div className="flex justify-between mb-4">
                 <h1 className="font-bold text-xl ">
                   {/* IDR {Number(event.price).toLocaleString()} */}
                 </h1>
-                <button className="underline">Size Chart</button>
               </div>
-              <div className="flex justify-between mb-6 text-white gap-3">
-                <div className="w-full h-12 rounded bg-black font-bold flex justify-center items-center">
-                  Brand New
-                </div>
-                <div className="w-full h-12 rounded bg-[#F2F2F2] font-bold grey flex justify-center items-center">
-                  Used
-                </div>
-                <div className="w-full h-12 rounded bg-black font-bold flex justify-center items-center">
-                  Pre-Order
-                </div>
-              </div>
-
-              <div className="py-2 px-5">
-                <div className="mb-6">
-                  <h2 className="font-bold mb-2">
-                    Please Make Sure The Size Fits You.
-                  </h2>
-                  <p className="mt-2">
-                    If you are unsure about your size, please click the size
-                    chart button and browse through the chart to find your
-                    correct measurements. Our company policy does not accept
-                    refunds or returns for sizing-related issues. For more
-                    details, kindly contact our Customer Service to consult
-                    further
-                  </p>
-                </div>
-
-                <div className="mb-6">
-                  <h2 className="font-bold mb-2">Authentic. Guaranteed.</h2>
-                  <p className="mt-2">
-                    {`We thoroughly check every purchase you make and applies our
-                    company's guarantee to the product's legitimacy. The
-                    guarantee is valid for 2 days after receiving the product
-                    from the delivery service. Should you have any concern about
-                    the product you purchase, kindly reach out to our Customer
-                    Service and Specialist on Monday - Saturday 10.00 - 21.00
-                    (GMT+7 / WIB).`}
-                  </p>
-                </div>
-
-                <div className="mb-6">
-                  <h2 className="font-bold mb-4">
-                    Share this product to your friends!
-                  </h2>
-                  <div className="mt-2 flex gap-6">
-                    {/* <button>
+              <div className="mb-6">
+                <h2 className="font-bold mb-4">
+                  Share this product to your friends!
+                </h2>
+                <div className="mt-2 flex gap-6">
+                  {/* <button>
                       <Image
                         width={24}
                         height={24}
@@ -131,7 +135,6 @@ export default async function Page({ params }: Props) {
                         }
                       />
                     </button> */}
-                  </div>
                 </div>
               </div>
             </div>
