@@ -1,13 +1,11 @@
 /** @format */
 "use client";
 import { getEvents } from "@/app/helpers/api";
-import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ICard } from "@/interfaces/card.interface";
 import CardSkeletonList from "./skeleton/card.skeleton";
-// import CardSkeletonList from "./skeleton/card.skeleton";
+import { Card } from "./card";
 
 export default function CatagoryList() {
   const [events, setEvents] = useState<Array<ICard>>([]);
@@ -26,11 +24,11 @@ export default function CatagoryList() {
       .finally(() => setIsLoading(false));
   }, [search]);
   return (
-    <div className="flex t items-center flex-col max-w-screen-2xl m-auto my-6">
-      <div className="text-2xl text-purple-950 font-bold my-5">
-        Featured Events
+    <div className="flex flex-col items-center max-w-screen-2xl m-auto my-6">
+      <div className="text-2xl text-purple-950 font-bold mt-5 mb-8 ">
+        Ada Event
       </div>
-      <div className="grid grid-cols-2 text-xs md:text-sm md:grid-cols-3  lg:grid-cols-4 lg:w-[80%] px-6 gap-4">
+      <div className=" grid grid-cols-2 text-xs md:text-sm md:grid-cols-3  lg:grid-cols-5 lg:w-[90%] px-6 lg:px-3 gap-4 lg:gap-10">
         {isLoading ? (
           <CardSkeletonList />
         ) : (
@@ -38,60 +36,5 @@ export default function CatagoryList() {
         )}
       </div>
     </div>
-  );
-}
-
-export function Card(props: ICard) {
-  const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-  return (
-    <Link href={"/events/" + props.slug}>
-      <div className="w-full  max-w-[230px] bg-purple-100 rounded-lg shadow-xl">
-        <div className=" w-full ">
-          <div className="w-full">
-            <div className=" relative">
-              <Image
-                width={216}
-                height={100}
-                className=" w-full rounded-t-lg"
-                src={"/tes.jpg"}
-                alt=""
-              />
-              <Image
-                width={18}
-                height={22}
-                alt=""
-                className={`w-[18px] h-[22px] absolute right-[15%] top-0 ${
-                  !(props.available_seats == 0) ? "hidden" : "block"
-                } `}
-                src="/sold-icon.png"
-              />
-
-              <div className="absolute left-0 top-0 bg-purple-50 px-2 py-1 font-medium rounded-br-lg">
-                {formatDate(props.start_date)}
-              </div>
-            </div>
-          </div>
-
-          <div className="px-2 md:px-5 mt-4 flex flex-col  ">
-            <b className="h-8 md:h-10 mb-1 w-full overflow-hidden ">
-              {props.name}
-            </b>
-            <b className="h-8 md:h-10 mb-2 w-full overflow-hidden text-gray-500">
-              {props.location}
-            </b>
-            <b className="text-[#159953] overflow-hidden mb-2">
-              IDR {props.price.toLocaleString()}
-            </b>
-          </div>
-        </div>
-      </div>
-    </Link>
   );
 }

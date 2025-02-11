@@ -19,7 +19,7 @@ const Carousel = () => {
   }, []);
 
   return (
-    <div className="relative w-[80%] h-32 md:h-64 overflow-hidden m-auto rounded-lg mt-10 ">
+    <div className="relative w-[90%] h-32 md:52 lg:h-64 overflow-hidden m-auto rounded-lg mt-10 ">
       <div
         className="flex transition-transform duration-500 ease-in-out"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
