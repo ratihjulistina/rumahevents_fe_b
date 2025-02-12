@@ -1,6 +1,6 @@
 /** @format */
 "use client";
-import { getEvents } from "@/app/helpers/api";
+import { getNearestEvents } from "@/app/helpers/api";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ICard } from "@/interfaces/card.interface";
@@ -16,7 +16,7 @@ export default function NearEvent() {
   useEffect(() => {
     console.log("MASUK SINI???");
     setIsLoading(true);
-    getEvents(search)
+    getNearestEvents(search)
       .then((res) => setEvents(res))
       .catch((err) => {
         console.log(err);
