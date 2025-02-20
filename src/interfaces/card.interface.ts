@@ -9,4 +9,5 @@ export interface ICard {
   image_src: string;
   start_date: string;
   end_date: string;
+  category: string;
 }

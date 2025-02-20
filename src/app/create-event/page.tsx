@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { api_url, fetchCategories, uploadToCloudinary } from "../helpers/api";
+import { api_url } from "../helpers/api";
 
 export interface Category {
   id: number;
@@ -14,18 +14,53 @@ export default function CreateEventPage() {
     description: "",
     location: "",
     available_seats: 0,
-    created_by: 0,
+    created_by: 1, // Assuming a default user ID for now
     price: 0,
-    image_src: "",
+    image_src: "", // Cloudinary image URL
     start_date: "",
     end_date: "",
-    category_ids: [] as number[],
+    category_ids: [] as number[], // Array of category IDs
   });
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
+  // Handle file input change
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+    }
+  };
+
+  // Upload image to Cloudinary
+  const uploadImage = async (id: number, file: File) => {
+    alert(`ID BRADER ${id}`);
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await fetch(api_url + `/events/image?iz=${id}`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to upload image");
+      }
+
+      const data = await response.json();
+      return data.imageUrl; // Assuming the backend returns { imageUrl: "https://..." }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw error;
+    }
+  };
+
+  // Fetch categories on component mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -34,7 +69,7 @@ export default function CreateEventPage() {
           throw new Error("Failed to fetch categories");
         }
         const data = await response.json();
-        console.log("Fetched categories:", data); // Debugging
+        console.log("Fetched categories:", data);
         setCategories(data.data);
       } catch (err) {
         console.error("Error fetching categories:", err);
@@ -47,6 +82,7 @@ export default function CreateEventPage() {
     fetchCategories();
   }, []);
 
+  // Handle input changes
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -57,18 +93,28 @@ export default function CreateEventPage() {
     }));
   };
 
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
+      // Step 1: Check whether image is selected
+      if (!imageFile) {
+        throw new Error("No image file selected");
+      }
+
+      // Step 2: Create the event with the image URL
       const response = await fetch(api_url + "/events/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          // image_src: imageUrl, // Include the Cloudinary image URL
+        }),
       });
 
       if (!response.ok) {
@@ -76,8 +122,10 @@ export default function CreateEventPage() {
       }
 
       const result = await response.json();
+      console.log("RESULT BRADERS ", result);
+      const imageUrl = await uploadImage(result.data.id, imageFile);
       alert("Event created successfully!");
-      console.log("Event created:", result);
+      console.log("Event created BRADER:", result);
 
       // Reset the form
       setFormData({
@@ -85,13 +133,14 @@ export default function CreateEventPage() {
         description: "",
         location: "",
         available_seats: 0,
-        price: 0,
         created_by: 1,
+        price: 0,
         image_src: "",
         start_date: "",
         end_date: "",
         category_ids: [],
       });
+      setImageFile(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
@@ -179,7 +228,7 @@ export default function CreateEventPage() {
             />
           </div>
 
-          {/* Image URL */}
+          {/* Event Photo */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Event Photo
@@ -188,16 +237,8 @@ export default function CreateEventPage() {
               type="file"
               name="image"
               accept="image/*"
-              onChange={async (e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  const imageUrl = await uploadToCloudinary(file);
-                  setFormData((prev) => ({
-                    ...prev,
-                    image_src: imageUrl,
-                  }));
-                }
-              }}
+              onChange={handleFileChange}
+              required
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>
@@ -238,7 +279,7 @@ export default function CreateEventPage() {
               Categories
             </label>
             <select
-              name="categoryIds"
+              name="category_ids"
               multiple
               value={formData.category_ids.map(String)}
               onChange={(e) => {
@@ -246,7 +287,6 @@ export default function CreateEventPage() {
                 const selectedIds = selectedOptions.map((option) =>
                   parseInt(option.value)
                 );
-                console.log("Selected category IDs:", selectedIds); // Debugging
                 setFormData((prev) => ({
                   ...prev,
                   category_ids: selectedIds,
@@ -274,12 +314,11 @@ export default function CreateEventPage() {
                 const selectedCategory = categories.find(
                   (category) => category.id === categoryId
                 );
-
                 return (
                   selectedCategory && (
                     <span
                       key={categoryId}
-                      className="inline-flex items-center px-2 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm"
+                      className="inline-flex items-center px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-sm"
                     >
                       {selectedCategory.category_name}
                       <button
@@ -287,12 +326,12 @@ export default function CreateEventPage() {
                         onClick={() => {
                           setFormData((prev) => ({
                             ...prev,
-                            categoryIds: prev.category_ids.filter(
+                            category_ids: prev.category_ids.filter(
                               (id) => id !== categoryId
                             ),
                           }));
                         }}
-                        className="ml-2 text-indigo-600 hover:text-indigo-900"
+                        className="ml-2 text-purple-600 hover:text-purple-900"
                       >
                         &times;
                       </button>
@@ -302,12 +341,13 @@ export default function CreateEventPage() {
               })}
             </div>
           </div>
+
           {/* Submit Button */}
           <div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              className="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
             >
               {loading ? "Creating..." : "Create Event"}
             </button>

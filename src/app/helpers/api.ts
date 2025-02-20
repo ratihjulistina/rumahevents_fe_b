@@ -5,7 +5,6 @@ import { Category } from "../create-event/page";
 export const api_url = process.env.NEXT_PUBLIC_API_URL || "";
 export const cloudinary_url = process.env.CLOUDINARY_URL || "";
 export const getEvents = async (eventName: string) => {
-  console.log("******************** API_URL ************* " + api_url);
   const res = await fetch(api_url + "/events/newest");
   const data = await res.json();
 
@@ -14,7 +13,6 @@ export const getEvents = async (eventName: string) => {
 };
 
 export const getNearestEvents = async (eventName: string) => {
-  console.log("******************** API_URL ************* " + api_url);
   const res = await fetch(api_url + "/events/nearest");
   const data = await res.json();
 
@@ -23,7 +21,6 @@ export const getNearestEvents = async (eventName: string) => {
 };
 
 export const getEvent = async (slug: string) => {
-  console.log("-------ini url ------", api_url + "/events/slug?slug=" + slug);
   const res = await fetch(api_url + "/events/slug?slug=" + slug);
   console.log("ini resnya----------====", res);
   const data = await res.json();
@@ -62,8 +59,8 @@ export const fetchCategories = async () => {
 
 export const uploadToCloudinary = async (file: File): Promise<string> => {
   const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", "your_upload_preset"); // Replace with your Cloudinary upload preset
+  formData.append("image", file);
+  formData.append("upload_preset", "event_images"); // Replace with your Cloudinary upload preset
 
   try {
     const response = await fetch(
@@ -79,6 +76,7 @@ export const uploadToCloudinary = async (file: File): Promise<string> => {
     }
 
     const data = await response.json();
+    console.log("ini URL IMAGE", data.secure_url);
     return data.secure_url; // Return the Cloudinary image URL
   } catch (error) {
     console.error("Error uploading image:", error);

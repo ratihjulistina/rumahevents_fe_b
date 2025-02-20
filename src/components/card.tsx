@@ -20,9 +20,9 @@ export function Card(props: ICard) {
               <Image
                 width={216}
                 height={100}
-                className=" w-full rounded-t-lg"
-                src={"/tes.jpg"}
-                alt=""
+                className=" w-full rounded-t-lg h-full lg:h-[150px] object-cover"
+                src={props.image_src}
+                alt="event-image"
               />
               <Image
                 width={60}

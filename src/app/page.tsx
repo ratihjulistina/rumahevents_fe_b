@@ -1,3 +1,4 @@
+import CategoryEvent from "@/components/category.events";
 import CatagoryList from "@/components/category.events";
 import FeaturedEvents from "@/components/featured.event";
 import Footer from "@/components/footer";
@@ -10,7 +11,7 @@ export default function Home() {
       <Carousel />
       <FeaturedEvents />
       <NearEvent />
-      <CatagoryList />
+      {/* <CategoryEvent filterkey="Art" /> */}
       <Footer />
     </>
   );

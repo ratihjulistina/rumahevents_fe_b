@@ -60,7 +60,7 @@ export default function SearchBar() {
                 >
                   <div className="flex justify-start items-center gap-4">
                     <Image
-                      src={"/tes.jpg"}
+                      src={event.image_src}
                       alt="event-image"
                       height={20}
                       width={65}

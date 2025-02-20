@@ -24,11 +24,11 @@ export default function CardList() {
       .finally(() => setIsLoading(false));
   }, [search]);
   return (
-    <div className="flex flex-col items-center max-w-screen-2xl m-auto my-6">
-      <div className="text-2xl text-purple-950 font-bold mt-5 mb-8 ">
+    <div className="flex flex-col max-w-screen-2xl m-auto my-6">
+      <div className="m-auto text-2xl lg:text-3xl text-purple-950 font-bold mt-5 mb-8 flex justify-start w-[90%]">
         Ada Event
       </div>
-      <div className=" grid grid-cols-2 text-xs md:text-sm md:grid-cols-3  lg:grid-cols-5 lg:w-[90%] px-6 lg:px-3 gap-4 lg:gap-10">
+      <div className="m-auto grid grid-cols-2 text-xs md:text-sm md:grid-cols-3  lg:grid-cols-5 lg:w-[90%] px-6 lg:px-3 gap-4 lg:gap-5">
         {isLoading ? (
           <CardSkeletonList />
         ) : (

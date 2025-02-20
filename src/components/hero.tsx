@@ -2,7 +2,12 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const images = ["/tes.jpg", "/tes.jpg", "/tes.jpg"];
+const images = [
+  "/carousel/carousel1.jpg",
+  "/carousel/carousel2.jpg",
+  "/carousel/carousel3.jpg",
+  "/carousel/carousel4.jpg",
+];
 
 const Carousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
