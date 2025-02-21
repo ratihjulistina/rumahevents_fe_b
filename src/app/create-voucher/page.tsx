@@ -66,7 +66,7 @@ const CreateVoucherForm = ({ eventId }: { eventId: number }) => {
       />
       <button
         type="submit"
-        className="w-full p-2 bg-blue-500 text-white rounded-lg"
+        className="w-full p-2 bg-purple-500 text-white rounded-lg"
       >
         Create Voucher
       </button>

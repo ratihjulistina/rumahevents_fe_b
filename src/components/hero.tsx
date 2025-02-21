@@ -12,15 +12,13 @@ const images = [
 const Carousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Function to move to the next slide
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
 
-  // Auto-slide effect
   useEffect(() => {
-    const interval = setInterval(nextSlide, 3000); // Change slide every 3 seconds
-    return () => clearInterval(interval); // Cleanup interval on component unmount
+    const interval = setInterval(nextSlide, 3000);
+    return () => clearInterval(interval);
   }, []);
 
   return (

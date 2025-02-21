@@ -86,7 +86,7 @@ const EventDetailClient: React.FC<EventDetailClientProps> = ({ event }) => {
                 </div>
                 <div className="flex justify-between my-10 items-center">
                   <h1 className="font-bold text-0.5xl md:text-xl">
-                    IDR {Number(event.price).toLocaleString()}
+                    IDR {Number(event.price).toLocaleString("id-ID")}
                   </h1>
                   <button
                     onClick={() => setModalOpen(true)}

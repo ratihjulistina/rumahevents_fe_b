@@ -73,8 +73,8 @@ export default function Navbar() {
         <NavbarMobile />
         {/* </SessionProvider> */}
 
-        <div className="flex p-2 overflow-x-auto w-full gap-6 md:justify-center items-center bg-purple-300 shadow-lg outline-1 ">
-          {/* <Link href="#" className="text-nowrap hover:text-[#ed3293]">
+        <div className="flex p-2 overflow-x-auto justify-center w-full gap-6 md:justify-center items-center bg-purple-300 shadow-lg outline-1 ">
+          <Link href="#" className="text-nowrap hover:text-[#ed3293]">
             Art
           </Link>
           <Link href="#" className="text-nowrap hover:text-[#ed3293]">
@@ -88,8 +88,8 @@ export default function Navbar() {
           </Link>
           <Link href="#" className="text-nowrap hover:text-[#ed3293]">
             Free
-          </Link> */}
-          <Categoryitem title="Art" />
+          </Link>
+          {/* <Categoryitem title="Art" /> */}
         </div>
       </div>
     </>
@@ -135,7 +135,7 @@ function NavbarDesktop() {
         <Link href={"/"}>
           <Image src="/logo.png" width={105} height={80} alt="logo"></Image>
         </Link>
-        <div className=" pr-[7px] flex bg-[#f0f0f0] w-[60%] rounded-md mx-8 h-[38px] min-h-max my-auto">
+        <div className=" pr-[7px] flex bg-[#f0f0f0] w-[55%] rounded-md mx-8 h-[38px] min-h-max my-auto">
           <div className="flex justify-center items-center w-full h-full  mr-0">
             <div className="flex justify-center items-center w-[38px] h-[38px] bg-purple-900 rounded-l-md">
               <Image
@@ -191,7 +191,7 @@ function NavbarDesktop() {
           </Link> */}
           <Link
             href={"/tickets"}
-            className="flex min-w-max justify-center items-center font-semibold gap-1 bg-purple-900 px-3 py-2"
+            className="flex min-w-max justify-center items-center font-semibold gap-2 bg-purple-900 px-3 py-2"
           >
             <div className="flex justify-center items-center ">
               <Image
@@ -203,12 +203,15 @@ function NavbarDesktop() {
             </div>
             <div className="text-white  text-sm">Tiket Saya</div>
           </Link>
-          <button onClick={handleClick} className="flex">
+          <button
+            onClick={handleClick}
+            className="flex items-center justify-between px-2"
+          >
             <Image
-              src={"/tes.jpg"}
+              src={"/no-profile.svg"}
               alt="avatar"
-              width={18}
-              height={18}
+              width={25}
+              height={25}
               className="mr-2 rounded-full aspect-square object-cover"
             />
             {/* <div>{session.user.first_name}</div> */}
@@ -360,34 +363,58 @@ function NavbarMobile() {
       )}
       {isClick && (
         <div className="md:hidden ">
-          <div className="px-2 pt-2 pb-3 spa-y-1 sm:px-3 bg-purple-100">
-            {/* <Link
-              href={"/"}
-              className="flex min-w-max justify-start items-center font-semibold gap-1  hover:bg-purple-300 rounded-lg p-2 "
+          <div className="px-2 pt-2 pb-3 spa-y-1 sm:px-3 bg-purple-100 text-purple-950">
+            {/*SIGN IN */}
+            <Link
+              href={"/tickets"}
+              className="flex min-w-max justify-start items-center font-semibold px-3 py-2 gap-2 hover:text-white hover:bg-purple-900 rounded-lg p-2 "
             >
               <Image
                 src="/ticket-icon.svg"
                 alt="ticket-icon"
                 width={19}
                 height={19}
+                className="bg-purple-500 p-1 rounded-full max-w-[36px]"
               />
 
-              <div className="text-white  text-sm">Tiket Saya</div>
+              <div className=" text-sm">Tiket Saya</div>
             </Link>
             <Link
-              href={"/"}
-              className="flex min-w-max justify-start items-center font-semibold gap-1  hover:bg-purple-300 rounded-lg p-2 "
+              href={"/create-event"}
+              className="flex min-w-max justify-start items-center font-semibold px-3 py-2 gap-2 hover:text-white hover:bg-purple-900 rounded-lg p-2"
             >
               <Image
-                src="/ticket-icon.svg"
-                alt="ticket-icon"
+                src="/event-icon-b.svg"
+                alt="event-icon"
                 width={19}
                 height={19}
               />
 
-              <div className="text-white  text-sm">Tiket Saya</div>
-            </Link> */}
-            <div className="flex flex-col items-start justify-center">
+              <div className="text-sm ">Buat Eventmu!</div>
+            </Link>
+            <div className="my-2 bg-slate-300 h-[0.5px]"></div>
+            <Link
+              href={"/"}
+              className="flex min-w-max justify-start items-center font-semibold px-3 py-2 gap-2 hover:text-white hover:bg-purple-900 rounded-lg p-2"
+            >
+              {" "}
+              Informasi Dasar
+            </Link>
+
+            <Link
+              href={"/"}
+              className="flex min-w-max justify-start items-center font-semibold px-3 py-2 gap-2 hover:text-white hover:bg-purple-900 rounded-lg p-2"
+            >
+              {" "}
+              Pengaturan
+            </Link>
+            <div className="my-2 bg-slate-300 h-[0.5px]"></div>
+
+            <button className="flex min-w-max justify-start items-center font-semibold px-3 py-2 gap-2 text-red-600 hover:text-red-800 rounded-lg p-2">
+              Keluar
+            </button>
+            {/* NOT YET SIGN IN */}
+            {/* <div className="flex flex-col items-start justify-center">
               <h1 className="text-xl font-bold text-purple-950 px-2">
                 Masuk ke Akunmu
               </h1>
@@ -450,7 +477,7 @@ function NavbarMobile() {
               />
 
               <div className="text-sm ">Hubungi Kami</div>
-            </Link>
+            </Link> */}
           </div>
         </div>
       )}

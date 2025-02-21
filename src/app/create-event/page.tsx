@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { api_url } from "../helpers/api";
+import { useRouter } from "next/navigation";
 
 export interface Category {
   id: number;
@@ -14,20 +15,19 @@ export default function CreateEventPage() {
     description: "",
     location: "",
     available_seats: 0,
-    created_by: 1, // Assuming a default user ID for now
+    created_by: 1,
     price: 0,
-    image_src: "", // Cloudinary image URL
+    image_src: "",
     start_date: "",
     end_date: "",
-    category_ids: [] as number[], // Array of category IDs
+    category_ids: [] as number[],
   });
-
+  const router = useRouter();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
-  // Handle file input change
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -35,9 +35,8 @@ export default function CreateEventPage() {
     }
   };
 
-  // Upload image to Cloudinary
   const uploadImage = async (id: number, file: File) => {
-    alert(`ID BRADER ${id}`);
+    //alert(`ID BRADER ${id}`);
     const formData = new FormData();
     formData.append("image", file);
 
@@ -53,14 +52,13 @@ export default function CreateEventPage() {
       }
 
       const data = await response.json();
-      return data.imageUrl; // Assuming the backend returns { imageUrl: "https://..." }
+      return data.imageUrl;
     } catch (error) {
       console.error("Error uploading image:", error);
       throw error;
     }
   };
 
-  // Fetch categories on component mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -82,7 +80,6 @@ export default function CreateEventPage() {
     fetchCategories();
   }, []);
 
-  // Handle input changes
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -93,19 +90,16 @@ export default function CreateEventPage() {
     }));
   };
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      // Step 1: Check whether image is selected
       if (!imageFile) {
         throw new Error("No image file selected");
       }
 
-      // Step 2: Create the event with the image URL
       const response = await fetch(api_url + "/events/", {
         method: "POST",
         headers: {
@@ -113,7 +107,6 @@ export default function CreateEventPage() {
         },
         body: JSON.stringify({
           ...formData,
-          // image_src: imageUrl, // Include the Cloudinary image URL
         }),
       });
 
@@ -127,7 +120,6 @@ export default function CreateEventPage() {
       alert("Event created successfully!");
       console.log("Event created BRADER:", result);
 
-      // Reset the form
       setFormData({
         name: "",
         description: "",
@@ -146,6 +138,7 @@ export default function CreateEventPage() {
     } finally {
       setLoading(false);
     }
+    router.push("/");
   };
 
   return (

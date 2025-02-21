@@ -51,7 +51,7 @@ export function Card(props: ICard) {
             <b className="text-[#159953] overflow-hidden mb-2">
               {props.price == 0
                 ? "Free"
-                : `IDR ${props.price.toLocaleString()}`}
+                : `IDR ${Number(props.price).toLocaleString("id-ID")}`}
             </b>
           </div>
         </div>

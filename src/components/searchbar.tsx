@@ -2,8 +2,6 @@
 
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
-import CategoryList from "@/components/category.events";
-import LatestEvent from "@/components/featured.event";
 import { api_url } from "@/app/helpers/api";
 import Link from "next/link";
 import Image from "next/image";

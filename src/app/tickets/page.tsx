@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import { api_url } from "@/app/helpers/api";
 import Link from "next/link";
 import { formatDate } from "@/components/utilities/formDate";
+import PaymentModal from "@/components/payment.modal";
 
-interface ITicket {
+export interface ITicket {
   id: number;
   no_invoice: string;
   event_id: number;
@@ -22,46 +23,47 @@ const TicketsPage = () => {
   const [activeTab, setActiveTab] = useState<"active" | "past">("active");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    const fetchTickets = async () => {
-      try {
-        const response = await fetch(api_url + "/tickets/user/3");
-        if (!response.ok) {
-          throw new Error("Failed to fetch tickets");
-        }
-        const data = await response.json();
-        console.log("MANATIKETNYABOSQU", data.data);
-        const now = new Date();
-        const active = data.data.filter(
-          (ticket: ITicket) => new Date(ticket.event_date) >= now
-        );
-        console.log("ACtive mana aktif", active);
-        const past = data.data.filter(
-          (ticket: ITicket) => new Date(ticket.event_date) < now
-        );
-        console.log("PASt mana lalu", past);
-        setActiveTickets(active);
-        setPastTickets(past);
-      } catch (err) {
-        setError("Failed to load tickets. Please try again.");
-        console.error(err);
-      } finally {
-        setIsLoading(false);
+  const [selectedTicket, setSelectedTicket] = useState<ITicket | null>(null);
+  const fetchTickets = async () => {
+    try {
+      const response = await fetch(api_url + "/tickets/user/3");
+      if (!response.ok) {
+        throw new Error("Failed to fetch tickets");
       }
-    };
-
+      const data = await response.json();
+      console.log("MANATIKETNYABOSQU", data.data);
+      const now = new Date();
+      const active = data.data.filter(
+        (ticket: ITicket) => new Date(ticket.event_date) >= now
+      );
+      console.log("ACtive mana aktif", active);
+      const past = data.data.filter(
+        (ticket: ITicket) => new Date(ticket.event_date) < now
+      );
+      console.log("PASt mana lalu", past);
+      setActiveTickets(active);
+      setPastTickets(past);
+    } catch (err) {
+      setError("Failed to load tickets. Please try again.");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchTickets();
   }, []);
 
   if (isLoading) {
-    return <div className="w-[90%]">Loading...</div>;
+    return <div className="w-[90%] m-auto">Loading...</div>;
   }
 
   if (error) {
     return <div className="text-red-500">{error}</div>;
   }
-
+  const handlePaymentSuccess = () => {
+    fetchTickets();
+  };
   return (
     <div className="p-6 w-[90%] m-auto">
       <h1 className="text-2xl font-bold mb-6">Tiket Kamu</h1>
@@ -100,32 +102,39 @@ const TicketsPage = () => {
                   className="border p-4 rounded-lg shadow-md flex flex-col items-start justify-between"
                 >
                   <h2 className="text-xl font-semibold">{ticket.event_name}</h2>
-                  <div className="flex flex-col items-start">
+                  <div className="flex flex-col items-start justify-between">
                     <p className="text-gray-600">{ticket.no_invoice}</p>
                     <p className="text-gray-600">
                       Tanggal Event: {formatDate(ticket.event_date)}
                     </p>
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-row items-center gap-10 bg-slate-300">
                       <div className="flex items-center gap-1">
                         <p className="text-gray-600">Price: </p>
 
                         <p className="text-purple-900 font-semibold">
-                          IDR {Number(ticket.price).toLocaleString()}
+                          IDR {Number(ticket.price).toLocaleString("id-ID")}
                         </p>
                       </div>
                       <p className="text-gray-600">{ticket.quantity} tiket</p>
                     </div>
-                    <p className="text-gray-600 font-semibold">
+                    <div className="text-gray-600 font-semibold">
                       Status: {ticket.status}
-                    </p>
+                    </div>
                   </div>
 
-                  <Link
-                    href={"/"}
+                  <button
+                    onClick={() => setSelectedTicket(ticket)}
                     className="mt-4 inline-block text-purple-600 hover:underline"
                   >
                     Bayar Tiket
-                  </Link>
+                  </button>
+                  {selectedTicket && (
+                    <PaymentModal
+                      ticket={selectedTicket}
+                      onClose={() => setSelectedTicket(null)}
+                      onPaymentSuccess={handlePaymentSuccess}
+                    />
+                  )}
                 </div>
               ))}
             </div>
@@ -145,17 +154,17 @@ const TicketsPage = () => {
                 className="border p-4 rounded-lg shadow-md flex flex-col items-start justify-between"
               >
                 <h2 className="text-xl font-semibold">{ticket.event_name}</h2>
-                <div className="flex flex-col items-start">
+                <div className="flex flex-col items-start justify-between">
                   <p className="text-gray-600">{ticket.no_invoice}</p>
                   <p className="text-gray-600">
                     Tanggal Event: {formatDate(ticket.event_date)}
                   </p>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-10 ">
                     <div className="flex items-center gap-1">
                       <p className="text-gray-600">Price: </p>
 
                       <p className="text-purple-900 font-semibold">
-                        IDR {Number(ticket.price).toLocaleString()}
+                        IDR {Number(ticket.price).toLocaleString("id-ID")}
                       </p>
                     </div>
                     <p className="text-gray-600">{ticket.quantity} tiket</p>
@@ -165,13 +174,21 @@ const TicketsPage = () => {
                     Status: {ticket.status}
                   </p>
                 </div>
-
-                <Link
-                  href={`/events/${ticket.event_id}`}
-                  className="mt-4 inline-block text-purple-600 hover:underline"
-                >
-                  View Event
-                </Link>
+                {ticket.status === "Done" ? (
+                  <Link
+                    href={`/review/${ticket.event_id}`}
+                    className="mt-4 inline-block text-purple-600 hover:underline"
+                  >
+                    Review Event
+                  </Link>
+                ) : (
+                  <Link
+                    href={`/`}
+                    className="mt-4 inline-block text-purple-600 hover:underline"
+                  >
+                    Lihat Event Terbaru
+                  </Link>
+                )}
               </div>
             ))}
           </div>
